@@ -1,4 +1,4 @@
-const BASE = 'https://study-optimizer-backend.onrender.com';
+const BASE = 'https://study-optimizer-backend.onrender.com/api';
 
 // ── Subjects ──────────────────────────────
 export async function fetchSubjects() {
