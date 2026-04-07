@@ -26,19 +26,22 @@ export default function App() {
   async function loadSubjects() {
     try {
       const data = await fetchSubjects();
+      console.log('Subjects from backend:', data);
       setSubjects(data || []);
-      console.log('Subjects:', data);
     } catch (error) {
       console.error('Error loading subjects:', error);
+      setSubjects([]);
     }
   }
 
   async function loadHistory() {
     try {
       const data = await fetchHistory();
+      console.log('History from backend:', data);
       setHistory(data || []);
     } catch (error) {
       console.error('Error loading history:', error);
+      setHistory([]);
     }
   }
 
@@ -47,9 +50,13 @@ export default function App() {
   }
 
   async function addHistory(run) {
-    const saved = await saveHistory(run);
-    setHistory((prev) => [...prev, saved]);
-    showToast('Optimal plan: ' + run.picked.length + ' subjects, value ' + run.totalValue);
+    try {
+      const saved = await saveHistory(run);
+      setHistory((prev) => [...prev, saved]);
+      showToast('Optimal plan: ' + run.picked.length + ' subjects, value ' + run.totalValue);
+    } catch (error) {
+      console.error('Error saving history:', error);
+    }
   }
 
   function showToast(msg) {
@@ -60,8 +67,10 @@ export default function App() {
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <Sidebar active={page} onChange={navigate} runCount={history.length} />
+
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <Topbar page={page} subjects={subjects} result={result} />
+
         <main style={{ flex: 1, overflowY: 'auto', background: 'var(--bg)' }}>
           {page === 'overview' && (
             <OverviewPage
